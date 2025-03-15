@@ -10,9 +10,23 @@ A simple demonstration of Prisma ORM with a MySQL database.
 
 ## Models
 
-1. **Account**: User account with email and password
-2. **Profile**: User profile information with one-to-one relationship to Account
-3. **Module**: Learning modules with many-to-one relationship to Account
+1. **Account**: User account with UUID, email, username, password, and timestamps
+   - Uses UUID as primary key instead of auto-incrementing integer
+   - Includes createdAt and updateAt timestamps
+   - Has one-to-one relation with Profile
+   - Has one-to-many relation with Module
+
+2. **Profile**: User profile with detailed information
+   - Uses UUID as primary key
+   - Includes firstname, middlename, lastname, suffix, bio, and picture
+   - Has timestamps for creation and updates
+   - Connected to Account with onDelete: Cascade
+
+3. **Module**: Learning modules with detailed information
+   - Uses UUID (recID) as primary key
+   - Includes moduleCode, moduleDetails, and moduleDesc
+   - Has timestamps for creation and updates
+   - Connected to Account with onDelete: Cascade
 
 ## Functions Implemented
 
@@ -27,10 +41,10 @@ The `index.js` file contains these simple functions:
 
 ### Update Functions
 - `updateAccount(id, email)`: Updates an account's email
-- `updateProfile(accountId, firstName)`: Updates a profile's first name
+- `updateProfile(userId, firstname)`: Updates a profile's first name
 
 ### Delete Functions
-- `deleteAccountAndRelations(id)`: Deletes an account and all related data
+- `deleteAccountAndRelations(id)`: Deletes an account and all related data (uses cascade delete)
 
 ## How to Run
 
@@ -40,9 +54,9 @@ The `index.js` file contains these simple functions:
    npm install
    ```
 3. Set up your database connection in the `.env` file
-4. Run the Prisma migrations:
+4. Push the schema to the database:
    ```
-   npx prisma migrate dev
+   npx prisma db push
    ```
 5. Run the application:
    ```
